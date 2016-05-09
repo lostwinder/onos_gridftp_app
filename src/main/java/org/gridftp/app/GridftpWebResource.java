@@ -1,14 +1,10 @@
 package org.gridftp.app;
 
-import jdk.internal.util.xml.impl.Input;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.onosproject.rest.AbstractWebResource;
 import com.fasterxml.jackson.databind.JsonNode;
-import javax.ws.rs.Path;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.QueryParam;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -21,14 +17,21 @@ import java.util.Map;
 @Path("gridftp")
 public class GridftpWebResource extends AbstractWebResource {
     /**
-     * Get the GridFTP application level information
+     * Get the GridFTP application level information with IP/Port
+     *
+     * @param ipAddr host IP address
+     * @param port host port
+     * @return 200 OK
      */
     @GET
-    public Response queryApplicationLevelInfo(@QueryParam("ip") String ipAddr,
-                                              @QueryParam("port") String port) {
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{ipAddr}/{port}")
+    public Response queryApplicationLevelInfo(@PathParam("ipAddr") String ipAddr,
+                                              @PathParam("port") String port) {
         GridftpService service = get(GridftpService.class);
-        GridftpAppInfo appInfo = service.getAppLevelInfo(ipAddr, port);
-        return Response.ok(appInfo.toString(), MediaType.APPLICATION_JSON_TYPE).build();
+        final GridftpAppInfo appInfo = service.getAppLevelInfo(ipAddr, port);
+        final ObjectNode root = codec(GridftpAppInfo.class).encode(appInfo, this);
+        return Response.ok(root).build();
     }
 
     @POST
@@ -40,6 +43,28 @@ public class GridftpWebResource extends AbstractWebResource {
                 Response.serverError().build();
     }
 
+    /**
+     * Remove Gridftp application level info for an ip + port combination
+     */
+    @DELETE
+    @Path("{ipAddr}/{port}")
+    public Response removeAppLevelInfo(@PathParam("ipAddr") String ipAddr,
+                                       @PathParam("port") String port) {
+        get(GridftpService.class).removeAppLevelInfo(ipAddr, port);
+        return Response.ok().build();
+    }
+
+
+    /**
+     * Remove the GridFTP application level info dictionary.
+     *
+     * return 200 OK
+     */
+    @DELETE
+    public Response clearGridftpAppInfoDict() {
+        get(GridftpService.class).clearGridftpAppInfoDict();
+        return Response.ok().build();
+    }
 
     /**
      * Turns a JSON string into an GridftpAppInfo instance.
@@ -52,6 +77,17 @@ public class GridftpWebResource extends AbstractWebResource {
             throw new IllegalArgumentException("Unable to parse Gridftp app info request", e);
         }
 
-        String s = node.path("ipAddr").asText(null);
+        String ipAddr = node.path("ipAddr").asText(null);
+        String port = node.path("port").asText(null);
+        String username = node.path("username").asText(null);
+        String filename = node.path("filename").asText(null);
+        String direction = node.path("direction").asText(null);
+
+        if (ipAddr!=null && port!=null && username!=null && filename!=null && direction!=null) {
+            return new GridftpAppInfo(ipAddr, port, username, filename, direction);
+        }
+        else {
+            throw new IllegalArgumentException("arguments must not be null.");
+        }
     }
 }

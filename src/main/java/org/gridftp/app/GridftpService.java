@@ -27,4 +27,9 @@ public interface GridftpService {
      * @param String port
      */
     void removeAppLevelInfo(String ipAddr, String port);
+
+    /**
+     * Clear GridFTP application level info dictionary.
+     */
+    void clearGridftpAppInfoDict();
 }

@@ -25,4 +25,9 @@ public interface GridftpStore extends Store {
      * Remove application level information for a Gridftp file transfer
      */
     void removeAppLevelInfo(String ipAddr, String port);
+
+    /**
+     * Clear Gridftp application level info dictionary
+     */
+    void clearGridftpAppInfoDict();
 }

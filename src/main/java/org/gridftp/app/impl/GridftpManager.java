@@ -60,14 +60,24 @@ public class GridftpManager implements GridftpService {
 
     @Override
     public boolean addApplicationLevelInfo(GridftpAppInfo newAppInfo) {
+        if (newAppInfo == null) {
+            return false;
+        }
         gridftpStore.addApplicationLevelInfo(newAppInfo);
-        log.info("New GridFTP file transfer application level information is added.");
+        log.info("New GridFTP file transfer application level information for {} is added.", newAppInfo.ipAddrPort());
+        return true;
     }
 
     @Override
     public void removeAppLevelInfo(String ipAddr, String port) {
         gridftpStore.removeAppLevelInfo(ipAddr, port);
         log.info("GridFTP application level information for IP:{} and port:{} is removed.", ipAddr, port);
+    }
+
+    @Override
+    public void clearGridftpAppInfoDict() {
+        gridftpStore.clearGridftpAppInfoDict();
+        log.info("GridFTP application level info dictionary is cleared.");
     }
 
 }
