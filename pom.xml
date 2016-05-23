@@ -22,18 +22,26 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
-    <description>ONOS OSGi bundle archetype</description>
+    <description>ONOS GridFTP traffic management application</description>
     <url>http://onosproject.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <onos.version>1.5.1</onos.version>
-        <onos.app.name>org.foo.app</onos.app.name>
-        <onos.app.title>Foo App</onos.app.title>
-        <onos.app.origin>Foo, Inc.</onos.app.origin>
-        <onos.app.category>default</onos.app.category>
+        <onos.app.name>org.gridftp.app</onos.app.name>
+        <onos.app.title>GridFTP SDN App</onos.app.title>
+        <onos.app.origin>Holland Computing Center</onos.app.origin>
+        <onos.app.category>Traffic Engineering</onos.app.category>
         <onos.app.url>http://onosproject.org</onos.app.url>
-        <onos.app.readme>ONOS OSGi bundle archetype.</onos.app.readme>
+        <onos.app.readme>ONOS GridFTP traffic management application</onos.app.readme>
+        
+        <web.context>/onos/v1</web.context>
+        <api.version>1.0.0</api.version>
+        <api.title>ONOS GridFTP Application</api.title>
+        <api.description>
+            APIs for interacting with the GridFTP application.
+        </api.description>
+        <api.package>org.gridftp.app.impl</api.package>
     </properties>
 
     <dependencies>
@@ -89,6 +97,19 @@
             <version>2.0.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onos-rest</artifactId>
+            <version>${onos.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onos-rest</artifactId>
+            <version>${onos.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
