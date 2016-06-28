@@ -17,8 +17,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.gridftp</groupId>
-    <artifactId>gridftp-app</artifactId>
+    <groupId>org.hcc</groupId>
+    <artifactId>gridftp</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
@@ -27,39 +27,21 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <onos.version>1.5.1</onos.version>
-        <onos.app.name>org.gridftp.app</onos.app.name>
-        <onos.app.title>GridFTP SDN App</onos.app.title>
-        <onos.app.origin>Holland Computing Center</onos.app.origin>
-        <onos.app.category>Traffic Engineering</onos.app.category>
-        <onos.app.url>http://onosproject.org</onos.app.url>
-        <onos.app.readme>ONOS GridFTP traffic management application</onos.app.readme>
-        
-        <web.context>/onos/v1</web.context>
+        <onos.version>1.5.0</onos.version>
+
+        <web.context>/onos/gridftp</web.context>
         <api.version>1.0.0</api.version>
         <api.title>ONOS GridFTP Application</api.title>
         <api.description>
             APIs for interacting with the GridFTP application.
         </api.description>
-        <api.package>org.gridftp.app.impl</api.package>
+        <api.package>org.hcc.gridftp</api.package>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.onosproject</groupId>
             <artifactId>onos-api</artifactId>
-            <version>${onos.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.onosproject</groupId>
-            <artifactId>onos-core-dist</artifactId>
-            <version>${onos.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.onosproject</groupId>
-            <artifactId>onos-core-serializers</artifactId>
             <version>${onos.version}</version>
         </dependency>
 
@@ -78,6 +60,13 @@
 
         <dependency>
             <groupId>org.onosproject</groupId>
+            <artifactId>onos-cli</artifactId>
+            <version>${onos.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.onosproject</groupId>
             <artifactId>onos-api</artifactId>
             <version>${onos.version}</version>
             <scope>test</scope>
@@ -85,42 +74,67 @@
         </dependency>
 
         <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onos-rest</artifactId>
+            <version>${onos.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onlab-rest</artifactId>
+            <version>${onos.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.onosproject</groupId>
+            <artifactId>onos-core-serializers</artifactId>
+            <version>${onos.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>1.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-servlet</artifactId>
+            <version>1.19</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.7.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.7.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>4.3.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.scr.annotations</artifactId>
             <version>1.9.12</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.0.1</version>
+            <groupId>org.apache.karaf.shell</groupId>
+            <artifactId>org.apache.karaf.shell.console</artifactId>
+            <version>3.0.5</version>
+            <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.onosproject</groupId>
-            <artifactId>onos-rest</artifactId>
-            <version>${onos.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.onosproject</groupId>
-            <artifactId>onos-rest</artifactId>
-            <version>${onos.version}</version>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- dependency>
-            <groupId>org.glassfish.jersey.test-framework</groupId>
-            <artifactId>jersey-test-framework-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
-            <artifactId>jersey-test-framework-provider-jetty</artifactId>
-            <scope>test</scope>
-        </dependency-->
     </dependencies>
 
     <build>
@@ -141,7 +155,25 @@
                             ${project.groupId}.${project.artifactId}
                         </Bundle-SymbolicName>
                         <Import-Package>
-                            *,org.glassfish.jersey.servlet
+                            org.slf4j,
+                            org.osgi.framework,
+                            javax.ws.rs,
+                            javax.ws.rs.core,
+                            com.sun.jersey.api.core,
+                            com.sun.jersey.spi.container.servlet,
+                            com.sun.jersey.server.impl.container.servlet,
+                            com.fasterxml.jackson.databind,
+                            com.fasterxml.jackson.databind.node,
+                            com.fasterxml.jackson.core,
+                            org.apache.karaf.shell.commands,
+                            org.apache.karaf.shell.console,
+                            com.google.common.*,
+                            org.onlab.packet.*,
+                            org.onlab.rest.*,
+                            org.onlab.osgi.*,
+                            org.onlab.util.*,
+                            org.onosproject.*,
+                            org.jboss.netty.util.*
                         </Import-Package>
                         <Web-ContextPath>${web.context}</Web-ContextPath>
                     </instructions>
